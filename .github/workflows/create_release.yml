@@ -4,8 +4,10 @@ on:
     inputs:
       commit:
         description: commit to build release
+        required: true
       tag_name:
         description: version to tag release
+        required: true
 
 jobs:
   build_and_deploy:
@@ -17,7 +19,12 @@ jobs:
         node-version: [16.x]
 
     steps:
-      - uses: actions/checkout@v3
+      
+
+      - name: "Checkout commit"
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.commit }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -34,7 +41,7 @@ jobs:
       - name: Fake Build App
         run: |
           mkdir dist
-          echo TEST > ./dist/test
+          cp *.* ./dist
       
       - name: Create version.json
         run: |
