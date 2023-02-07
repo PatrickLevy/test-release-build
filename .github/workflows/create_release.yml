@@ -62,6 +62,7 @@ jobs:
           tag_name: ${{ github.event.inputs.tag_name }}
           prerelease: true
           name: Release ${{ github.event.inputs.tag_name }}
+          generate_release_notes: true
           # token: ${{ secrets.OPS_GITHUB_BOT_TOKEN }}
           token: ${{ secrets.token }}
           files: |
