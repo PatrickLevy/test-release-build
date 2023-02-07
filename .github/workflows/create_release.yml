@@ -4,12 +4,12 @@ on:
     inputs:
       commit:
         description: commit to build release
-      version_tag:
+      tag_name:
         description: version to tag release
 
 jobs:
   build_and_deploy:
-    name: Build App and Push to S3
+    name: Build App and Push to Release
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,7 +17,7 @@ jobs:
         node-version: [16.x]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -50,9 +50,12 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          draft: true
+          # draft: true
+          target_commitish: ${{ github.event.inputs.commit }}
+          tag_name: ${{ github.event.inputs.tag_name }}
           prerelease: true
-          name: New Release
+          name: Release ${{ github.event.inputs.tag_name }}
           # token: ${{ secrets.OPS_GITHUB_BOT_TOKEN }}
+          token: ${{ secrets.token }}
           files: |
             dist.zip
