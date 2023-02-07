@@ -1,4 +1,4 @@
-name: Create Release
+name: Create and Tag Release
 on:
   workflow_dispatch:
     inputs:
@@ -8,6 +8,10 @@ on:
       tag_name:
         description: version to tag release
         required: true
+      deploy_upon_completion:
+        description: deploy to staging after creating release
+        type: boolean
+        default: false
 
 jobs:
   build_and_deploy:
@@ -44,8 +48,10 @@ jobs:
           cp *.* ./dist
       
       - name: Create version.json
+        # run: |
+        #   echo "{ \""ui"\": \""$(git log --pretty=format:'%h' -n 1)"\", \""version"\": \"${{ github.event.inputs.tag_name }}\" }" > ./dist/version.json
         run: |
-          echo "{ \""ui"\": \""$(git log --pretty=format:'%h' -n 1)"\", \""version"\": \"${{ github.event.inputs.tag_name }}\" }" > ./dist/version.json
+          echo "{ \""ui"\": \""$(git log --pretty=format:'%h' -n 1)"\", \""version"\": \""$(git describe --tags)"\" }" > ./dist/version.json
 
       # Create an artifact of the dist folder for creating releases (stable, stable-delayed, stable-hotfix)
 
