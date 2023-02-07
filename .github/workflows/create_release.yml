@@ -1,0 +1,60 @@
+name: Create Release
+on:
+  workflow_dispatch:
+  push:
+    inputs:
+      commit:
+        description: commit to build release
+      version_tag:
+        description: version to tag release
+
+jobs:
+  build_and_deploy:
+    name: Build App and Push to S3
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # - name: Check Node Config
+      #   run: |
+      #     node -v
+      #     npm config set spin false
+      # - name: Install Dependencies
+      #   run: npm ci
+
+      - name: Fake Build App
+        run: |
+          mkdir dist
+          echo TEST > ./dist/test
+      
+      - name: Create version.json
+        run: |
+          echo "{ \""ui"\": \""$(git log --pretty=format:'%h' -n 1)"\" }" > ./dist/version.json
+
+      # Create an artifact of the dist folder for creating releases (stable, stable-delayed, stable-hotfix)
+
+      # Push the dist.zip up to a draft release (create a new draft release if one doesn't exist)
+      - name: Zip up the dist folder
+        if: github.ref == 'refs/heads/stable'
+        run: (cd dist && zip -r ../dist.zip .)
+
+      - name: Push package to draft pre-release (only if stable branch)
+        if: github.ref == 'refs/heads/stable'
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          prerelease: true
+          name: New Release
+          # token: ${{ secrets.OPS_GITHUB_BOT_TOKEN }}
+          files: |
+            dist.zip
