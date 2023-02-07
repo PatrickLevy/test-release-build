@@ -38,7 +38,7 @@ jobs:
       
       - name: Create version.json
         run: |
-          echo "{ \""ui"\": \""$(git log --pretty=format:'%h' -n 1)"\" }" > ./dist/version.json
+          echo "{ \""ui"\": \""$(git log --pretty=format:'%h' -n 1)"\", \""version"\": \"${{ github.event.inputs.tag_name }}\" }" > ./dist/version.json
 
       # Create an artifact of the dist folder for creating releases (stable, stable-delayed, stable-hotfix)
 
