@@ -1,7 +1,6 @@
 name: Create Release
 on:
   workflow_dispatch:
-  push:
     inputs:
       commit:
         description: commit to build release
@@ -48,8 +47,7 @@ jobs:
         if: github.ref == 'refs/heads/stable'
         run: (cd dist && zip -r ../dist.zip .)
 
-      - name: Push package to draft pre-release (only if stable branch)
-        if: github.ref == 'refs/heads/stable'
+      - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           draft: true
