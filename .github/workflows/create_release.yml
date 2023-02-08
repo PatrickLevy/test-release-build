@@ -76,5 +76,9 @@ jobs:
 
       - name: Trigger another workflow
         if: ${{ github.event.inputs.deploy_upon_completion }} == "true"
+        env:
+          GITHUB_TOKEN: ${{ secrets.token }}
         run: |
           echo "yeppers"
+          gh workflow run another_workflow.yml -f commit=12345 -f tag_name=2468
+          

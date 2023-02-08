@@ -26,11 +26,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Fake Build App
+      - name: Something to do
         run: |
-          mkdir dist
-          cp *.* ./dist
+          echo ${{ github.event.inputs.commit }}
+          echo ${{ github.event.inputs.tag_name }}
+      # - name: Fake Build App
+      #   run: |
+      #     mkdir dist
+      #     cp *.* ./dist
       
-      - name: Create version.json
-        run: |
-          echo "{ \""ui"\": \""$(git log --pretty=format:'%h' -n 1)"\", \""version"\": \"${{ github.event.inputs.tag_name }}\" }" > ./dist/version.json
+      # - name: Create version.json
+      #   run: |
+      #     echo "{ \""ui"\": \""$(git log --pretty=format:'%h' -n 1)"\", \""version"\": \"${{ github.event.inputs.tag_name }}\" }" > ./dist/version.json
