@@ -1,0 +1,36 @@
+name: Another Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: commit to build release
+        required: true
+      tag_name:
+        description: version to tag release
+        required: true
+
+jobs:
+  build_and_deploy:
+    name: Build App and Push to Release
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Fake Build App
+        run: |
+          mkdir dist
+          cp *.* ./dist
+      
+      - name: Create version.json
+        run: |
+          echo "{ \""ui"\": \""$(git log --pretty=format:'%h' -n 1)"\", \""version"\": \"${{ github.event.inputs.tag_name }}\" }" > ./dist/version.json

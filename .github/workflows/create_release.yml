@@ -73,3 +73,8 @@ jobs:
           token: ${{ secrets.token }}
           files: |
             dist.zip
+
+      - name: Trigger another workflow
+        if: ${{ github.event.inputs.deploy_upon_completion }} == "true"
+        run: |
+          echo "yeppers"
