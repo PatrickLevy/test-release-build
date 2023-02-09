@@ -36,7 +36,9 @@ jobs:
         run: |
           echo ${{ github.event.inputs.tag_name }}
       
-      - name: "Can I have a dynamic name - tag: ${{ github.event.inputs.tag_name }}""
+      - name: "Can I have a dynamic name - tag: ${{ github.event.inputs.tag_name }}"
+        run: echo "yup, it worked"
+
       # - name: Fake Build App
       #   run: |
       #     mkdir dist
