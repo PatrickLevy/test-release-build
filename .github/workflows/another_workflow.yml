@@ -28,7 +28,7 @@ jobs:
 
       - name: Check that merge will be FF
         run: |
-          git merge-base --is-ancestor origin/stable github.event.inputs.tag_name
+          git merge-base --is-ancestor origin/staging github.event.inputs.tag_name
 
       - name: Something to do
         run: |
