@@ -3,9 +3,6 @@ name: Another Workflow
 on:
   workflow_dispatch:
     inputs:
-      commit:
-        description: commit to build release
-        required: true
       tag_name:
         description: version to tag release
         required: true
@@ -20,7 +17,12 @@ jobs:
         node-version: [16.x]
 
     steps:
-      
+      - name: "Checkout tag_name"
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.tag_name }}
+          fetch-depth: 0
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
