@@ -6,6 +6,13 @@ on:
       tag_name:
         description: version to tag release
         required: true
+      deploy_target:
+        type: choice
+        required: true
+        default: production-preflight
+        options:
+          - production-preflight
+          - production
 
 jobs:
   build_and_deploy:
@@ -38,6 +45,13 @@ jobs:
       
       - name: "Can I have a dynamic name - tag: ${{ github.event.inputs.tag_name }}"
         run: echo "yup, it worked"
+
+      - name: "check some bashy stuff"
+        run: |
+          if [ ${{ github.event.inputs.deploy_target }} == "production-preflight" ]; then s3bucket="preflight-bucket"; fi
+          if [ ${{ github.event.inputs.deploy_target }} == "production" ]; then s3bucket="latest-bucket"; fi
+
+          echo $s3bucket
 
       # - name: Fake Build App
       #   run: |
